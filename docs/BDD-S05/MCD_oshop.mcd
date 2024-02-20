@@ -1,0 +1,9 @@
+BRAND: _name, footer_order
+made, 01 PRODUCT, 0N BRAND
+PRODUCT: _name, description, picture, price, rate, status
+is a, 01 PRODUCT, 0N TYPE
+
+:
+CATEGORY: _name, subtitle, picture, home_order
+belongs to, 01 PRODUCT, 0N CATEGORY
+TYPE: _name, footer_order
