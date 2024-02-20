@@ -7,6 +7,7 @@
 // autoload.php permet de charger d'un coup toutes les dépendances installées avec composer
 // mais aussi d'activer le chargement automatique des classes (convention PSR-4)
 require_once '../vendor/autoload.php';
+use App\Controllers\MainController;
 
 /* ------------
 --- ROUTAGE ---
@@ -45,7 +46,7 @@ $router->map(
     '/',
     [
         'method' => 'home',
-        'controller' => '\App\Controllers\MainController' // On indique le FQCN de la classe
+        'controller' => MainController::class // On indique le FQCN de la classe
     ],
     'main-home'
 );
