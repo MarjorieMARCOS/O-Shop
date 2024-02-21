@@ -52,7 +52,42 @@ $router->map(
     ],
     'main-home'
 );
-
+$router->map(
+    'GET',
+    '/categorie/',
+    [
+        'method' => 'category',
+        'controller' => MainController::class // On indique le FQCN de la classe
+    ],
+    'main-category'
+);
+$router->map(
+    'GET',
+    '/produit/',
+    [
+        'method' => 'product',
+        'controller' => MainController::class // On indique le FQCN de la classe
+    ],
+    'main-product'
+);
+$router->map(
+    'GET',
+    '/produit/ajouter',
+    [
+        'method' => 'productAdd',
+        'controller' => MainController::class // On indique le FQCN de la classe
+    ],
+    'main-product-ajouter'
+);
+$router->map(
+    'GET',
+    '/categorie/ajouter',
+    [
+        'method' => 'categoryAdd',
+        'controller' => MainController::class // On indique le FQCN de la classe
+    ],
+    'main-category-ajouter'
+);
 
 /* -------------
 --- DISPATCH ---

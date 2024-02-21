@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\CoreModel;
 use App\Utils\Database;
-use PDO;
+use \PDO;
 
 class Category extends CoreModel
 {
@@ -127,7 +127,19 @@ class Category extends CoreModel
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `category`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+
+        return $results;
+    }
+
+    public function findOnly3()
+    {
+        $pdo = Database::getPDO();
+        $sql = 'SELECT * 
+                FROM `category`
+                LIMIT 3';
+        $pdoStatement = $pdo->query($sql);
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
         return $results;
     }

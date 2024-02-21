@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\CoreModel;
 use App\Utils\Database;
-use PDO;
+use \PDO;
 
 /**
  * Une instance de Product = un produit dans la base de données
@@ -88,7 +89,19 @@ class Product extends CoreModel
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `product`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+
+        return $results;
+    }
+
+    public function findOnly3()
+    {
+        $pdo = Database::getPDO();
+        $sql = 'SELECT * 
+                FROM `product`
+                LIMIT 3';
+        $pdoStatement = $pdo->query($sql);
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
         return $results;
     }

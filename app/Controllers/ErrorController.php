@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controllers;
+use App\Utils\Database;
+use \PDO;
 
 // Classe gérant les erreurs (404, 403)
 class ErrorController extends CoreController
