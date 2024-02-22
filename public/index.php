@@ -61,7 +61,7 @@ $router->map(
 
 $router->map(
     'GET',
-    '/categorie/list',
+    '/category/list',
     [
         'method' => 'list',
         'controller' => CategoryController::class // On indique le FQCN de la classe
@@ -71,7 +71,7 @@ $router->map(
 
 $router->map(
     'GET',
-    '/categorie/ajouter',
+    '/category/add',
     [
         'method' => 'add',
         'controller' => CategoryController::class // On indique le FQCN de la classe
@@ -80,12 +80,31 @@ $router->map(
 );
 $router->map(
     'POST',
-    '/categorie/ajouter',
+    '/category/add',
     [
         'method' => 'create',
         'controller' => CategoryController::class // On indique le FQCN de la classe
     ],
     'category-create'
+);
+$router->map(
+    'GET',
+    '/category/[i:id]',
+    [
+        'method' => 'update',
+        'controller' => CategoryController::class // On indique le FQCN de la classe
+    ],
+    'category-update'
+);
+
+$router->map(
+    'POST',
+    '/category/update',
+    [
+        'method' => 'modify',
+        'controller' => CategoryController::class // On indique le FQCN de la classe
+    ],
+    'category-modify'
 );
 
 /* ---------------
@@ -94,7 +113,7 @@ $router->map(
 
 $router->map(
     'GET',
-    '/produit/list',
+    '/product/list',
     [
         'method' => 'list',
         'controller' => ProductController::class // On indique le FQCN de la classe
@@ -103,7 +122,7 @@ $router->map(
 );
 $router->map(
     'GET',
-    '/produit/ajouter',
+    '/product/add',
     [
         'method' => 'add',
         'controller' => ProductController::class // On indique le FQCN de la classe
@@ -112,12 +131,31 @@ $router->map(
 );
 $router->map(
     'POST',
-    '/produit/ajouter',
+    '/product/add',
     [
         'method' => 'create',
         'controller' => ProductController::class // On indique le FQCN de la classe
     ],
     'product-create'
+);
+$router->map(
+    'GET',
+    '/product/[i:id]',
+    [
+        'method' => 'update',
+        'controller' => ProductController::class // On indique le FQCN de la classe
+    ],
+    'product-update'
+);
+
+$router->map(
+    'POST',
+    '/product/update',
+    [
+        'method' => 'modify',
+        'controller' => ProductController::class // On indique le FQCN de la classe
+    ],
+    'product-modify'
 );
 
 

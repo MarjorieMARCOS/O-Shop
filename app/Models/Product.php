@@ -30,7 +30,7 @@ class Product extends CoreModel
      */
     private $price;
     /**
-     * @var int
+     * @var float
      */
     private $rate;
     /**
@@ -109,23 +109,22 @@ class Product extends CoreModel
     public function insert()
     {
 
-        $this->name = filter_input(INPUT_POST, 'name');
-        $this->description = filter_input(INPUT_POST, 'description');
-        $this->picture = filter_input(INPUT_POST, 'picture');
-        $this->price = filter_input(INPUT_POST, 'price');
-        $this->rate = filter_input(INPUT_POST, 'rate');
-        $this->brand_id = filter_input(INPUT_POST, 'brand_id');
-        $this->category_id = filter_input(INPUT_POST, 'category_id');
-        $this->type_id = filter_input(INPUT_POST, 'type_id');
-
         $pdo = Database::getPDO();
 
         $sql = "
             INSERT INTO `product` (name, description, picture, price, rate, brand_id, category_id, type_id)
-            VALUES ('{$this->name}', '{$this->description}', '{$this->picture}', '{$this->price}', '{$this->rate}', '{$this->brand_id}', '{$this->category_id}', '{$this->type_id}' )
-        ";
+            VALUES (:name, :description, :picture, :price, :rate, :brand_id, :category_id, :type_id)";
+        $query = $pdo->prepare($sql);
+        $query->bindValue(':name', $this->name);
+        $query->bindValue(':description', $this->description);
+        $query->bindValue(':picture', $this->picture);
+        $query->bindValue(':price', $this->price);
+        $query->bindValue(':rate', $this->rate);
+        $query->bindValue(':brand_id', $this->brand_id);
+        $query->bindValue(':category_id', $this->category_id);
+        $query->bindValue(':type_id', $this->type_id);
 
-        $insertedRows = $pdo->exec($sql);
+        $insertedRows = $query->execute();
 
         // Si au moins une ligne ajoutée
         if ($insertedRows > 0) {
@@ -139,6 +138,34 @@ class Product extends CoreModel
 
         // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
         return false;
+    }
+
+    public function update($id)
+    {
+		// Récupération de l'objet PDO représentant la connexion à la DB
+		$pdo = Database::getPDO();
+
+		// Ecriture de la requête INSERT INTO
+		$sql = "UPDATE `product`
+			    SET name = :name, description = :description, picture = :picture, price = :price, rate = :rate, brand_id = :brand_id, category_id = :category_id, type_id = :type_id
+                WHERE id = " . $id;
+
+		// Préperation de la requete
+		$query = $pdo->prepare($sql);
+        $query->bindValue(':name', $this->name);
+        $query->bindValue(':description', $this->description);
+        $query->bindValue(':picture', $this->picture);
+        $query->bindValue(':price', $this->price);
+        $query->bindValue(':rate', $this->rate);
+        $query->bindValue(':brand_id', $this->brand_id);
+        $query->bindValue(':category_id', $this->category_id);
+        $query->bindValue(':type_id', $this->type_id);
+
+		// Execution de la requête d'insertion (exec, pas query)
+		$updatedRows = $query->execute();
+
+		 // On retourne VRAI, si au moins une ligne ajoutée
+         return ($updatedRows > 0);
     }
 
     /**
@@ -158,7 +185,12 @@ class Product extends CoreModel
      */
     public function setName(string $name)
     {
+        if(empty($name)) {
+            return false;
+        }
         $this->name = $name;
+        return true;
+       
     }
 
     /**
@@ -178,7 +210,12 @@ class Product extends CoreModel
      */
     public function setDescription(string $description)
     {
+        if(empty($description)) {
+            return false;
+        }
         $this->description = $description;
+        return true;
+        
     }
 
     /**
@@ -198,7 +235,11 @@ class Product extends CoreModel
      */
     public function setPicture(string $picture)
     {
+        if(empty($picture)) {
+            return false;
+        }
         $this->picture = $picture;
+        return true;
     }
 
     /**
@@ -218,7 +259,12 @@ class Product extends CoreModel
      */
     public function setPrice(float $price)
     {
+        if(empty($price)) {
+            return false;
+        }
         $this->price = $price;
+        return true;
+        
     }
 
     /**
@@ -238,7 +284,11 @@ class Product extends CoreModel
      */
     public function setRate(int $rate)
     {
+        if(empty($rate)) {
+            return false;
+        }
         $this->rate = $rate;
+        return true;  
     }
 
     /**

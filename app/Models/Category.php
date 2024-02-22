@@ -42,7 +42,11 @@ class Category extends CoreModel
      */
     public function setName(string $name)
     {
-        $this->name = $name;
+        if(empty($name)) {
+			return false;
+		}
+		$this->name = $name;
+		return true;
     }
 
     /**
@@ -57,8 +61,13 @@ class Category extends CoreModel
      * Set the value of subtitle
      */
     public function setSubtitle($subtitle)
-    {
-        $this->subtitle = $subtitle;
+    {        
+        if(empty($subtitle)) {
+        return false;
+    }
+    $this->subtitle = $subtitle;
+    return true;
+   
     }
 
     /**
@@ -74,7 +83,11 @@ class Category extends CoreModel
      */
     public function setPicture($picture)
     {
+        if(empty($picture)) {
+            return false;
+        }
         $this->picture = $picture;
+        return true;
     }
 
     /**
@@ -164,33 +177,63 @@ class Category extends CoreModel
         return $categories;
     }
 
-    public function insert()
+	/**
+	 * Enregistre une nouvelle catégorie dans la BDD
+	 *
+	 * @return boolean true si l'enregistrement s'est bien passé
+	 */
+	public function insert(): bool
+	{
+		// Récupération de l'objet PDO représentant la connexion à la DB
+		$pdo = Database::getPDO();
+
+		// Ecriture de la requête INSERT INTO
+		$sql = "INSERT INTO `category` (name, subtitle, picture)
+			VALUES (:name, :subtitle, :picture)";
+
+		// Préperation de la requete
+		$query = $pdo->prepare($sql);
+		$query->bindValue(':name', $this->name);
+		$query->bindValue(':subtitle', $this->subtitle);
+		$query->bindValue(':picture', $this->picture);
+
+		// Execution de la requête d'insertion (exec, pas query)
+		$insertedRows = $query->execute();
+
+		// Si au moins une ligne ajoutée
+		if ($insertedRows > 0) {
+			// Alors on récupère l'id auto-incrémenté généré par MySQL
+			$this->id = $pdo->lastInsertId();
+
+			// On retourne VRAI car l'ajout a parfaitement fonctionné
+			return true;
+			// => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
+		}
+
+		// Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
+		return false;
+	}
+
+    public function update($id)
     {
+		// Récupération de l'objet PDO représentant la connexion à la DB
+		$pdo = Database::getPDO();
 
-        $this->name = filter_input(INPUT_POST, 'name');
-        $this->subtitle = filter_input(INPUT_POST, 'subtitle');
-        $this->picture = filter_input(INPUT_POST, 'picture');
+		// Ecriture de la requête INSERT INTO
+		$sql = "UPDATE `category`
+			    SET name = :name, subtitle = :subtitle, picture = :picture
+                WHERE id = " . $id;
 
-        $pdo = Database::getPDO();
+		// Préperation de la requete
+		$query = $pdo->prepare($sql);
+		$query->bindValue(':name', $this->name);
+		$query->bindValue(':subtitle', $this->subtitle);
+		$query->bindValue(':picture', $this->picture);
 
-        $sql = "
-            INSERT INTO `category` (name, subtitle, picture)
-            VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}' )
-        ";
+		// Execution de la requête d'insertion (exec, pas query)
+		$updatedRows = $query->execute();
 
-        $insertedRows = $pdo->exec($sql);
-
-        // Si au moins une ligne ajoutée
-        if ($insertedRows > 0) {
-            // Alors on récupère l'id auto-incrémenté généré par MySQL
-            $this->id = $pdo->lastInsertId();
-
-            // On retourne VRAI car l'ajout a parfaitement fonctionné
-            return true;
-            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
-        }
-
-        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
-        return false;
+		 // On retourne VRAI, si au moins une ligne ajoutée
+         return ($updatedRows > 0);
     }
 }

@@ -30,7 +30,7 @@
 					<td><?= $product->getCategoryId(); ?></td>
 					<td><?= $product->getTypeId(); ?></td>
 					<td class="text-end">
-						<a href="#" class="btn btn-sm btn-warning">
+						<a href="<?= $router->generate('product-update', ['id' => $product->getId()]);   ?>" class="btn btn-sm btn-warning">
 							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 						</a>
 						<!-- Example single danger button -->
