@@ -8,6 +8,8 @@
 // mais aussi d'activer le chargement automatique des classes (convention PSR-4)
 
 use App\Controllers\MainController;
+use App\Controllers\CategoryController;
+use App\Controllers\ProductController;
 
 require_once '../vendor/autoload.php';
 
@@ -52,42 +54,72 @@ $router->map(
     ],
     'main-home'
 );
+
+/* ---------------
+--- CATEGORIES ---
+------------------*/
+
 $router->map(
     'GET',
-    '/categorie/',
+    '/categorie/list',
     [
-        'method' => 'category',
-        'controller' => MainController::class // On indique le FQCN de la classe
+        'method' => 'list',
+        'controller' => CategoryController::class // On indique le FQCN de la classe
     ],
-    'main-category'
+    'category-list'
+);
+
+$router->map(
+    'GET',
+    '/categorie/ajouter',
+    [
+        'method' => 'add',
+        'controller' => CategoryController::class // On indique le FQCN de la classe
+    ],
+    'category-add'
 );
 $router->map(
-    'GET',
-    '/produit/',
+    'POST',
+    '/categorie/ajouter',
     [
-        'method' => 'product',
-        'controller' => MainController::class // On indique le FQCN de la classe
+        'method' => 'create',
+        'controller' => CategoryController::class // On indique le FQCN de la classe
     ],
-    'main-product'
+    'category-create'
+);
+
+/* ---------------
+---- PRODUCTS ----
+------------------*/
+
+$router->map(
+    'GET',
+    '/produit/list',
+    [
+        'method' => 'list',
+        'controller' => ProductController::class // On indique le FQCN de la classe
+    ],
+    'product-list'
 );
 $router->map(
     'GET',
     '/produit/ajouter',
     [
-        'method' => 'productAdd',
-        'controller' => MainController::class // On indique le FQCN de la classe
+        'method' => 'add',
+        'controller' => ProductController::class // On indique le FQCN de la classe
     ],
-    'main-product-ajouter'
+    'product-add'
 );
 $router->map(
-    'GET',
-    '/categorie/ajouter',
+    'POST',
+    '/produit/ajouter',
     [
-        'method' => 'categoryAdd',
-        'controller' => MainController::class // On indique le FQCN de la classe
+        'method' => 'create',
+        'controller' => ProductController::class // On indique le FQCN de la classe
     ],
-    'main-category-ajouter'
+    'product-create'
 );
+
 
 /* -------------
 --- DISPATCH ---

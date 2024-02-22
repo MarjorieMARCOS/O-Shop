@@ -56,7 +56,7 @@ class Product extends CoreModel
      * @param int $productId ID du produit
      * @return Product
      */
-    public function find($productId)
+    public static function find($productId)
     {
         // récupérer un objet PDO = connexion à la BDD
         $pdo = Database::getPDO();
@@ -84,7 +84,7 @@ class Product extends CoreModel
      *
      * @return Product[]
      */
-    public function findAll()
+    public static function findAll(): array
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `product`';
@@ -94,7 +94,7 @@ class Product extends CoreModel
         return $results;
     }
 
-    public function findOnly3()
+    public static function findOnly3(): array
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * 
@@ -104,6 +104,41 @@ class Product extends CoreModel
         $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
         return $results;
+    }
+
+    public function insert()
+    {
+
+        $this->name = filter_input(INPUT_POST, 'name');
+        $this->description = filter_input(INPUT_POST, 'description');
+        $this->picture = filter_input(INPUT_POST, 'picture');
+        $this->price = filter_input(INPUT_POST, 'price');
+        $this->rate = filter_input(INPUT_POST, 'rate');
+        $this->brand_id = filter_input(INPUT_POST, 'brand_id');
+        $this->category_id = filter_input(INPUT_POST, 'category_id');
+        $this->type_id = filter_input(INPUT_POST, 'type_id');
+
+        $pdo = Database::getPDO();
+
+        $sql = "
+            INSERT INTO `product` (name, description, picture, price, rate, brand_id, category_id, type_id)
+            VALUES ('{$this->name}', '{$this->description}', '{$this->picture}', '{$this->price}', '{$this->rate}', '{$this->brand_id}', '{$this->category_id}', '{$this->type_id}' )
+        ";
+
+        $insertedRows = $pdo->exec($sql);
+
+        // Si au moins une ligne ajoutée
+        if ($insertedRows > 0) {
+            // Alors on récupère l'id auto-incrémenté généré par MySQL
+            $this->id = $pdo->lastInsertId();
+
+            // On retourne VRAI car l'ajout a parfaitement fonctionné
+            return true;
+            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
+        }
+
+        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
+        return false;
     }
 
     /**

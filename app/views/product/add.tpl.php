@@ -1,11 +1,11 @@
 
 <div class="container my-4">
 
-<a href="<?= $router->generate('main-product')   ?>" class="btn btn-success float-end">Retour</a>
+<a href="<?= $router->generate('product-list')   ?>" class="btn btn-success float-end">Retour</a>
 
 <h2>Ajouter un produit</h2>
 
-<form action="" method="POST" class="mt-5">
+<form action="<?= $router->generate('product-create')   ?>" method="POST" class="mt-5">
 
     <div class="mb-3">
         <label for="name" class="form-label">Nom</label>
@@ -31,6 +31,22 @@
     <div class="mb-3">
         <label for="price" class="form-label">Prix</label>
         <input type="text" value="" class="form-control" id="price" name="price" placeholder="Prix du produit">
+    </div>
+    <div class="mb-3">
+        <label for="rate" class="form-label">Note</label>
+        <input type="text" value="" class="form-control" id="rate" name="rate" placeholder="Prix du produit">
+    </div>
+    <div class="mb-3">
+        <label for="brand_id" class="form-label">brand_id</label>
+        <input type="text" value="" class="form-control" id="brand_id" name="brand_id" placeholder="Prix du produit">
+    </div>
+    <div class="mb-3">
+        <label for="category_id" class="form-label">category_id</label>
+        <input type="text" value="" class="form-control" id="category_id" name="category_id" placeholder="Prix du produit">
+    </div>
+    <div class="mb-3">
+        <label for="type_id" class="form-label">type_id</label>
+        <input type="text" value="" class="form-control" id="type_id" name="type_id" placeholder="Prix du produit">
     </div>
 
     <div class="d-grid gap-2">

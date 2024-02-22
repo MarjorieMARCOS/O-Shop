@@ -99,7 +99,7 @@ class Category extends CoreModel
      * @param int $categoryId ID de la catégorie
      * @return Category
      */
-    public function find($categoryId)
+    public static function find($categoryId)
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -122,7 +122,7 @@ class Category extends CoreModel
      *
      * @return Category[]
      */
-    public function findAll()
+    public static function findAll(): array
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `category`';
@@ -132,7 +132,7 @@ class Category extends CoreModel
         return $results;
     }
 
-    public function findOnly3()
+    public static function findOnly3(): array
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * 
@@ -149,7 +149,7 @@ class Category extends CoreModel
      *
      * @return Category[]
      */
-    public function findAllHomepage()
+    public static function findAllHomepage()
     {
         $pdo = Database::getPDO();
         $sql = '
@@ -162,5 +162,35 @@ class Category extends CoreModel
         $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
 
         return $categories;
+    }
+
+    public function insert()
+    {
+
+        $this->name = filter_input(INPUT_POST, 'name');
+        $this->subtitle = filter_input(INPUT_POST, 'subtitle');
+        $this->picture = filter_input(INPUT_POST, 'picture');
+
+        $pdo = Database::getPDO();
+
+        $sql = "
+            INSERT INTO `category` (name, subtitle, picture)
+            VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}' )
+        ";
+
+        $insertedRows = $pdo->exec($sql);
+
+        // Si au moins une ligne ajoutée
+        if ($insertedRows > 0) {
+            // Alors on récupère l'id auto-incrémenté généré par MySQL
+            $this->id = $pdo->lastInsertId();
+
+            // On retourne VRAI car l'ajout a parfaitement fonctionné
+            return true;
+            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
+        }
+
+        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
+        return false;
     }
 }
