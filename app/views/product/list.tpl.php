@@ -3,7 +3,7 @@
 	<a href="<?= $router->generate('product-add') ?>" class="btn btn-success float-end">Ajouter</a>
 
 	<h2>Liste des produits</h2>
-
+	<?php require __DIR__ . '/../partials/messages.tpl.php'; ?>
 	<table class="table table-striped table-hover mt-4">
 		<thead>
 			<tr>
@@ -12,9 +12,9 @@
 				<th scope="col">Description</th>
 				<th scope="col">Prix</th>
 				<th scope="col">Note</th>
-				<th scope="col">Brand ID</th>
-				<th scope="col">Category ID</th>
-				<th scope="col">Type ID</th>
+				<th scope="col">Picture</th>
+
+
 			</tr>
 		</thead>
 		<tbody>
@@ -26,9 +26,8 @@
 					<td><?= $product->getDescription(); ?></td>
 					<td><?= $product->getPrice(); ?></td>
 					<td><?= $product->getRate(); ?></td>
-					<td><?= $product->getBrandId(); ?></td>
-					<td><?= $product->getCategoryId(); ?></td>
-					<td><?= $product->getTypeId(); ?></td>
+					<td><img class="w-25 h-25" src="<?= $product->getPicture(); ?>" alt="<?= $product->getName(); ?>"></td>
+
 					<td class="text-end">
 						<a href="<?= $router->generate('product-update', ['id' => $product->getId()]);   ?>" class="btn btn-sm btn-warning">
 							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>

@@ -6,17 +6,9 @@ namespace App\Models;
 // On centralise ici toutes les propriétés et méthodes utiles pour TOUS les Models
 class CoreModel
 {
-    /**
-     * @var int
-     */
+
     protected $id;
-    /**
-     * @var string
-     */
     protected $created_at;
-    /**
-     * @var string
-     */
     protected $updated_at;
 
 

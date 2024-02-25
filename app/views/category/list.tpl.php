@@ -7,15 +7,14 @@
 	<a href="<?= $router->generate('category-add') ?>" class="btn btn-success float-end">Ajouter</a>
 	
 	<h2>Liste des catégories</h2>
-
+	<?php require __DIR__ . '/../partials/messages.tpl.php'; ?>
 	<table class="table table-striped table-hover mt-4">
 		<thead>
 			<tr>
 				<th scope="col">#</th>
-				<th scope="col">Nom</th>
-				<th scope="col">Sous-titre</th>
+				<th class="w-25 text-center" scope="col">Nom</th>
+				<th class="w-50 text-center" scope="col">Sous-titre</th>
 				<th scope="col">Picture</th>
-				<th scope="col"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -23,9 +22,9 @@
 				<!-- Categorie -->
 				<tr>
 					<th scope="row"><?= $category->getId(); ?></th>
-					<td><?= $category->getName(); ?></td>
-					<td><?= $category->getSubtitle(); ?></td>
-					<td><?= $category->getPicture(); ?></td>
+					<td class="w-25 text-center"><?= $category->getName(); ?></td>
+					<td class="w-50 text-center"><?= $category->getSubtitle(); ?></td>
+					<td><img class="w-25 h-25" src="<?= $category->getPicture(); ?>" alt="<?= $category->getName(); ?>"></td>
 					<td class="text-end">
 						<a href="<?= $router->generate('category-update', ['id' => $category->getId()]); ?>" class="btn btn-sm btn-warning">
 							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>

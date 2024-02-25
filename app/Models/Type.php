@@ -15,10 +15,8 @@ class Type extends CoreModel
     // Les propriétés représentent les champs
     // Attention il faut que les propriétés aient le même nom (précisément) que les colonnes de la table
 
-    /**
-     * @var string
-     */
     private $name;
+    private $footer_order;
 
     /**
      * Méthode permettant de récupérer un enregistrement de la table Type en fonction d'un id donné
@@ -49,33 +47,35 @@ class Type extends CoreModel
      *
      * @return Type[]
      */
-    public static function findAll()
+    public static function findAll(): array
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `type`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Type');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
         return $results;
     }
 
-    /**
-     * Get the value of name
-     *
-     * @return  string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @param  string  $name
-     */
     public function setName(string $name)
     {
         $this->name = $name;
+    }
+
+    public function getFooter_order()
+    {
+        return $this->footer_order;
+    }
+
+    public function setFooter_order($footer_order)
+    {
+        $this->footer_order = $footer_order;
+
+        return $this;
     }
 }

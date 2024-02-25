@@ -13,6 +13,26 @@ class CoreController
 		// Termine le script PHP
 		exit();
     }
+    
+    /**
+	 * Enregistre en session flash message
+	 *
+	 * @param string $message à afficher
+	 * @return void
+	 */
+	protected function addFlashNotification(string $message) {
+		array_push($_SESSION['Notifications'], $message);
+	}
+
+	/**
+	 * Enregistre en session flash message d'erreur
+	 *
+	 * @param string $message à afficher
+	 * @return void
+	 */
+	protected function addFlashErrorMessage(string $message) {
+		array_push($_SESSION['ErrorMessages'], $message);
+	}
 
     
     /**

@@ -10,9 +10,22 @@
 use App\Controllers\MainController;
 use App\Controllers\CategoryController;
 use App\Controllers\ProductController;
+use App\Controllers\AppUserController;
 
 require_once '../vendor/autoload.php';
 
+session_start();
+
+// Initialise une variable de session 'nbVisite' égale à 0 si la variable n'est pas déjà initialisée;
+if( !isset($_SESSION['ErrorMessages']) ) {
+	$_SESSION['ErrorMessages'] = [];
+}
+
+if( !isset($_SESSION['Notifications']) ) {
+	$_SESSION['Notifications'] = [];
+}
+
+//dump($_SESSION);
 /* ------------
 --- ROUTAGE ---
 -------------*/
@@ -89,7 +102,7 @@ $router->map(
 );
 $router->map(
     'GET',
-    '/category/[i:id]',
+    '/category/update/[i:id]',
     [
         'method' => 'update',
         'controller' => CategoryController::class // On indique le FQCN de la classe
@@ -99,7 +112,7 @@ $router->map(
 
 $router->map(
     'POST',
-    '/category/update',
+    '/category/update/[i:id]',
     [
         'method' => 'modify',
         'controller' => CategoryController::class // On indique le FQCN de la classe
@@ -140,7 +153,7 @@ $router->map(
 );
 $router->map(
     'GET',
-    '/product/[i:id]',
+    '/product/update/[i:id]',
     [
         'method' => 'update',
         'controller' => ProductController::class // On indique le FQCN de la classe
@@ -150,13 +163,37 @@ $router->map(
 
 $router->map(
     'POST',
-    '/product/update',
+    '/product/update/[i:id]',
     [
         'method' => 'modify',
         'controller' => ProductController::class // On indique le FQCN de la classe
     ],
     'product-modify'
 );
+
+/* -------------
+-- CONNEXION --
+--------------*/
+
+$router->map(
+    'GET',
+    '/connexion/',
+    [
+        'method' => 'user',
+        'controller' => AppUserController::class // On indique le FQCN de la classe
+    ],
+    'connexion-user'
+);
+$router->map(
+    'POST',
+    '/connexion/',
+    [
+        'method' => 'login',
+        'controller' => AppUserController::class // On indique le FQCN de la classe
+    ],
+    'connexion-login'
+);
+
 
 
 /* -------------

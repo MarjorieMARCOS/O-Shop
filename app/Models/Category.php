@@ -4,42 +4,21 @@ namespace App\Models;
 use App\Models\CoreModel;
 use App\Utils\Database;
 use \PDO;
+use \Exception;
 
 class Category extends CoreModel
 {
 
-    /**
-     * @var string
-     */
     private $name;
-    /**
-     * @var string
-     */
     private $subtitle;
-    /**
-     * @var string
-     */
     private $picture;
-    /**
-     * @var int
-     */
     private $home_order;
 
-    /**
-     * Get the value of name
-     *
-     * @return  string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @param  string  $name
-     */
     public function setName(string $name)
     {
         if(empty($name)) {
@@ -49,58 +28,40 @@ class Category extends CoreModel
 		return true;
     }
 
-    /**
-     * Get the value of subtitle
-     */
     public function getSubtitle()
     {
         return $this->subtitle;
     }
 
-    /**
-     * Set the value of subtitle
-     */
     public function setSubtitle($subtitle)
     {        
-        if(empty($subtitle)) {
-        return false;
-    }
-    $this->subtitle = $subtitle;
-    return true;
+            if(empty($subtitle)) {
+            return false;
+            }
+        $this->subtitle = $subtitle;
+        return true;
    
     }
 
-    /**
-     * Get the value of picture
-     */
     public function getPicture()
     {
         return $this->picture;
     }
 
-    /**
-     * Set the value of picture
-     */
     public function setPicture($picture)
     {
-        if(empty($picture)) {
-            return false;
-        }
+            if(empty($picture)) {
+                return false;
+            }
         $this->picture = $picture;
         return true;
     }
 
-    /**
-     * Get the value of home_order
-     */
     public function getHomeOrder()
     {
         return $this->home_order;
     }
 
-    /**
-     * Set the value of home_order
-     */
     public function setHomeOrder($home_order)
     {
         $this->home_order = $home_order;
@@ -110,9 +71,9 @@ class Category extends CoreModel
      * Méthode permettant de récupérer un enregistrement de la table Category en fonction d'un id donné
      *
      * @param int $categoryId ID de la catégorie
-     * @return Category
+     * @return ?Category
      */
-    public static function find($categoryId)
+    public static function find(int $categoryId): ?Category
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -124,10 +85,15 @@ class Category extends CoreModel
         $pdoStatement = $pdo->query($sql);
 
         // un seul résultat => fetchObject
-        $category = $pdoStatement->fetchObject('App\Models\Category');
+        $category = $pdoStatement->fetchObject(self::class);
 
-        // retourner le résultat
-        return $category;
+        if(false === $category) {
+			// La catégorie est introuvable, elle n'existe pas
+			return null;
+		}
+
+		// retourner le résultat une instance de Catégorie
+		return $category;
     }
 
     /**
@@ -145,6 +111,11 @@ class Category extends CoreModel
         return $results;
     }
 
+	/**
+	 * Récupérer les 3 catégories sur la home page
+	 *
+	 * @return Category[]
+	 */
     public static function findOnly3(): array
     {
         $pdo = Database::getPDO();
@@ -162,7 +133,7 @@ class Category extends CoreModel
      *
      * @return Category[]
      */
-    public static function findAllHomepage()
+    public static function findAllHomepage(): array
     {
         $pdo = Database::getPDO();
         $sql = '
@@ -172,7 +143,7 @@ class Category extends CoreModel
             ORDER BY home_order ASC
         ';
         $pdoStatement = $pdo->query($sql);
-        $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
+        $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
         return $categories;
     }
@@ -208,32 +179,46 @@ class Category extends CoreModel
 			// On retourne VRAI car l'ajout a parfaitement fonctionné
 			return true;
 			// => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
+            
 		}
 
 		// Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
 		return false;
+        
 	}
 
-    public function update($id)
+    /**
+	 * Met à jour catégorie dans la BDD
+	 *
+	 * @throws Exception lance une exception si la requete SQL s'est mal passée
+	 */
+    public function update(): void
     {
 		// Récupération de l'objet PDO représentant la connexion à la DB
 		$pdo = Database::getPDO();
 
 		// Ecriture de la requête INSERT INTO
 		$sql = "UPDATE `category`
-			    SET name = :name, subtitle = :subtitle, picture = :picture
-                WHERE id = " . $id;
+			    SET name = :name, subtitle = :subtitle, picture = :picture, updated_at = NOW()
+                WHERE id = :id";
 
 		// Préperation de la requete
 		$query = $pdo->prepare($sql);
 		$query->bindValue(':name', $this->name);
 		$query->bindValue(':subtitle', $this->subtitle);
 		$query->bindValue(':picture', $this->picture);
+        $query->bindValue(':id', $this->id);
 
 		// Execution de la requête d'insertion (exec, pas query)
 		$updatedRows = $query->execute();
 
-		 // On retourne VRAI, si au moins une ligne ajoutée
-         return ($updatedRows > 0);
+		// Si aucune ligne n'est modifiée
+		if (false === $updatedRows) {
+			// Je lance une exception pour indiquer une erreur
+			// Lancer une exception stoppe le reste de la fonction
+			throw new Exception('Impossible de mettre à jour la catégorie');
+		}
+	
+
     }
 }

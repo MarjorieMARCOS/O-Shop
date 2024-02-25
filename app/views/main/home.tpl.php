@@ -8,7 +8,7 @@ $limitListProduct = $viewData['limitListProduct'];
 		<p class="display-4">
 			Bienvenue dans le backOffice <strong>Dans les shoe</strong>...
 		</p>
-
+		<?php require __DIR__ . '/../partials/messages.tpl.php'; ?>
 		<div class="row mt-5">
 			<div class="col-12 col-md-6">
 				<div class="card text-white mb-3">

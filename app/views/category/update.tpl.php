@@ -9,11 +9,7 @@ $category = $viewData['category'];
 
 <h2>Mettre à jour une catégorie</h2>
 
-<form action="<?= $router->generate('category-modify');   ?>" method="POST" class="mt-5">
-<div class="mb-3">
-        <label for="name" class="form-label">ID numéro : <?= $category->getId();  ?></label>
-        <input type="hidden" name="id" value="<?= $category->getId();  ?>">
-    </div>
+<form action="" method="POST" class="mt-5">
     <div class="mb-3">
         <label for="name" class="form-label">Nom</label>
         <input type="text" value="<?= $category->getName();  ?>" class="form-control" id="name" name="name" placeholder="Nom de la catégorie">

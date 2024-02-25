@@ -35,7 +35,10 @@
 						<a class="nav-link " href="#">Tags</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link " href="#">Sélection Accueil</a>
+						<a class="nav-link " href="#">Tags</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link  <?= str_contains($viewName, 'user')? 'active': ''; ?>" href="<?= $router->generate('connexion-user') ?>">Connexion</a>
 					</li>
 				</ul>
 			</div>
