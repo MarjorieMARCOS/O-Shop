@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-// Si j'ai besoin du Model Category
 use App\Models\Category;
 use App\Models\Product;
 
@@ -15,11 +14,18 @@ class MainController extends CoreController
      */
     public function home()
     {
-        
-        $data = [];
-        $data['limitListCategory'] = Category::findOnly3();
-        $data['limitListProduct'] = Product::findOnly3();
-        $this->show('main/home', $data);
-    }
+		// @deprecated 
+		// $this->checkAuthorisation(['admin', 'catalog-manager']);
 
+        // On appelle la méthode show() de l'objet courant
+        // En argument, on fournit le fichier de Vue
+        // Par convention, chaque fichier de vue sera dans un sous-dossier du nom du Controller
+        
+		// Plus besoin de passer par un objet pour faire des select
+		// On utlise static et la classe de la fonction
+		$data['categoryList'] = Category::findAll();
+		$data['productList'] = Product::findAll();
+
+		$this->show('main/home', $data);
+    }
 }

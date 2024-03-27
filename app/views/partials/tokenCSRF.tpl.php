@@ -1,0 +1,1 @@
+<input value="<?= $tokenCSRF; ?>" type="hidden" id="tokenCSRF" name="tokenCSRF">

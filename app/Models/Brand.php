@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Utils\Database;
+use Exception;
 use PDO;
 
 /**
@@ -12,134 +13,189 @@ use PDO;
  */
 class Brand extends CoreModel
 {
-    // Les propriétés représentent les champs
-    // Attention il faut que les propriétés aient le même nom (précisément) que les colonnes de la table
 
-    private $name;
-    private $footer_order;
+	/**
+	 * @var string
+	 */
+	private $name;
 
-    /**
-     * Méthode permettant de récupérer un enregistrement de la table Brand en fonction d'un id donné
-     *
-     * @param int $brandId ID de la marque
-     * @return Brand
-     */
-    public static function find($brandId)
-    {
-        // se connecter à la BDD
-        $pdo = Database::getPDO();
+	private $footer_order;
 
-        // écrire notre requête
-        $sql = '
-            SELECT *
+	/**
+	 * Méthode permettant de récupérer un enregistrement de la table Brand en fonction d'un id donné
+	 *
+	 * @param int $brandId ID de la marque
+	 * @return Brand
+	 */
+	public static function find(int $brandId): Brand
+	{
+		// se connecter à la BDD
+		$pdo = Database::getPDO();
+
+		// écrire notre requête
+		$sql = 'SELECT *
             FROM brand
             WHERE id = ' . $brandId;
 
-        // exécuter notre requête
-        $pdoStatement = $pdo->query($sql);
+		// exécuter notre requête
+		$pdoStatement = $pdo->query($sql);
 
-        // un seul résultat => fetchObject
-        $brand = $pdoStatement->fetchObject('App\Models\Brand');
+		// un seul résultat => fetchObject
+		$brand = $pdoStatement->fetchObject(self::class);
 
-        // retourner le résultat
-        return $brand;
-    }
+		// L'utilisateur n'est pas trouvé
+		if (false === $brand) {
+			throw new Exception('Marque introuvable');
+		}
 
-    /**
-     * Méthode permettant de récupérer tous les enregistrements de la table brand
-     *
-     * @return Brand[]
-     */
-    public static function findAll()
-    {
-        $pdo = Database::getPDO();
-        $sql = 'SELECT * FROM `brand`';
-        $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+		return $brand;
+	}
 
-        return $results;
-    }
+	/**
+	 * Méthode permettant de récupérer tous les enregistrements de la table brand
+	 *
+	 * @return Brand[]
+	 */
+	public static function findAll(): array
+	{
+		$pdo = Database::getPDO();
+		$sql = 'SELECT * FROM `brand`';
+		$pdoStatement = $pdo->query($sql);
+		$results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
-    /**
-     * Méthode permettant d'ajouter un enregistrement dans la table brand
-     * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
-     *
-     * @return bool
-     */
-    public function insert()
-    {
-        // Récupération de l'objet PDO représentant la connexion à la DB
-        $pdo = Database::getPDO();
+		return $results;
+	}
 
-        // Ecriture de la requête INSERT INTO
-        $sql = "
-            INSERT INTO `brand` (name)
-            VALUES ('{$this->name}')
-        ";
+	/**
+	 * Enregistre d'une nouvelle marque dans la BDD
+	 *
+	 * @return void
+	 * @throws Exception si l'enregistrement a échoué
+	 */
+	public function insert(): void
+	{
+		// Récupération de l'objet PDO représentant la connexion à la DB
+		$pdo = Database::getPDO();
 
-        // Execution de la requête d'insertion (exec, pas query)
-        $insertedRows = $pdo->exec($sql);
+		// Ecriture de la requête INSERT INTO
+		$sql = "INSERT INTO `brand` (name)
+			VALUES (:name)";
 
-        // Si au moins une ligne ajoutée
-        if ($insertedRows > 0) {
-            // Alors on récupère l'id auto-incrémenté généré par MySQL
-            $this->id = $pdo->lastInsertId();
+		// Préperation de la requete
+		$query = $pdo->prepare($sql);
+		$query->bindValue(':name', $this->name);
 
-            // On retourne VRAI car l'ajout a parfaitement fonctionné
-            return true;
-            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
-        }
+		// Execution de la requête d'insertion (exec, pas query)
+		$insertedRow = $query->execute();
 
-        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
-        return false;
-    }
+		if (0 === $insertedRow) {
+			// Aucune ligne ajoutée dans la BDD
+			// On lance une exception 
+			throw new Exception("Impossible d'enregistrer la nouvelle marque");
+		}
+		
+		// Alors on récupère l'id auto-incrémenté généré par MySQL
+		$this->id = $pdo->lastInsertId();
+	}
 
-    /**
-     * Méthode permettant de mettre à jour un enregistrement dans la table brand
-     * L'objet courant doit contenir l'id, et toutes les données à ajouter : 1 propriété => 1 colonne dans la table
-     *
-     * @return bool
-     */
-    public function update()
-    {
-        // Récupération de l'objet PDO représentant la connexion à la DB
-        $pdo = Database::getPDO();
+	/**
+	 * Met à jour une marque dans la BDD
+	 *
+	 * @throws Exception lance une exception si la requete SQL s'est mal passée
+	 * @return void
+	 */
+	public function update(): void
+	{
+		// Récupération de l'objet PDO représentant la connexion à la DB
+		$pdo = Database::getPDO();
 
-        // Ecriture de la requête UPDATE
-        $sql = "
-            UPDATE `brand`
-            SET
-                name = '{$this->name}',
-                updated_at = NOW()
-            WHERE id = {$this->id}
-        ";
+		// Ecriture de la requête INSERT INTO
+		$sql = "UPDATE `brand`
+		SET name = :name,
+			footer_order = :footer_order,
+			updated_at = NOW()
+		WHERE id = :id";
 
-        // Execution de la requête de mise à jour (exec, pas query)
-        $updatedRows = $pdo->exec($sql);
+		// Préperation de la requete
+		$query = $pdo->prepare($sql);
+		$query->bindValue(':name', $this->name);
+		$query->bindValue(':footer_order', $this->footer_order);
+		$query->bindValue(':id', $this->id);
 
-        // On retourne VRAI, si au moins une ligne ajoutée
-        return ($updatedRows > 0);
-    }
+		// Execution de la requête d'insertion (exec, pas query)
+		$updatedRows = $query->execute();
 
-    public function getName()
-    {
-        return $this->name;
-    }
+		// Si aucune ligne n'est modifiée
+		if (false === $updatedRows) {
+			// Je lance une exception pour indiquer une erreur
+			// Lancer une exception stoppe le reste de la fonction
+			throw new Exception('Impossible de mettre à jour la marque');
+		}
+	}
 
-    public function setName(string $name)
-    {
-        $this->name = $name;
-    }
+	/**
+	 * Supprimer un type dans le BDD
+	 *
+	 * @throws Exception lance une exception si la requete SQL s'est mal passée
+	 * @return void
+	 */
+	public function delete(): void
+	{
+		// Récupération de l'objet PDO représentant la connexion à la DB
+		$pdo = Database::getPDO();
 
-    public function getFooter_order()
-    {
-        return $this->footer_order;
-    }
+		// Ecriture de la requête UPDATE
+		$sql = 'DELETE FROM `brand`
+					WHERE id = :id';
 
-    public function setFooter_order($footer_order)
-    {
-        $this->footer_order = $footer_order;
+		// On aurait pu faire un query / exec car $id est déjà filtré par alto router 
+		$pdoStatement = $pdo->prepare($sql);
 
-        return $this;
-    }
+		$pdoStatement->bindValue(':id', $this->id);
+
+		$pdoStatement->execute();
+
+		// On retourne VRAI, une ligne a été supprimée
+		if (1 != $pdoStatement->rowCount()) {
+			throw new Exception('Echec supression de la marque');
+		}
+	}
+
+	public static function resetFooterOrder(): bool 
+	{
+		$pdo = Database::getPDO();
+		
+		$sql = 'UPDATE `brand` SET footer_order = 0';
+		
+		$pdoStatement = $pdo->query($sql);
+		
+		return $pdoStatement->execute();
+	}
+
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	public function setName(string $name)
+	{
+		if (empty($name)) {
+			return false;
+		}
+
+		$this->name = $name;
+		return true;
+	}
+
+	public function getFooter_order()
+	{
+		return $this->footer_order;
+	}
+
+	public function setFooter_order($footer_order)
+	{
+		$this->footer_order = $footer_order;
+
+		return $this;
+	}
 }

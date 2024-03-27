@@ -1,4 +1,6 @@
-<?php if (0 != sizeof($_SESSION['ErrorMessages'])) : ?>
+<?php 
+
+if (0 != sizeof($_SESSION['ErrorMessages'])) : ?>
 	<div class="alert alert-danger alert-dismissible fade show" role="alert">
 		<?php foreach ($_SESSION['ErrorMessages'] as $message) : ?>
 			<div><?= $message; ?></div>
