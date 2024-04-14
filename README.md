@@ -14,10 +14,8 @@ PHP, MYSQL, CSS avec Bootsrap et HTML.
 ## Installation
 
 1. Installer les dépendances avec `composer install`.
-2. Importer la base de données `docs/database.sql`.
+2. Importer la base de données `docs/SQL/database.sql`.
 3. Créer le fichier `app/config.ini` à partir du fichier `app/config.ini.dist` et le compléter avec les informations de connexion à la base de données.
-4. Installer `https://packagist.org/packages/benoclock/alto-dispatcher`.
-
 
 ## Models
 

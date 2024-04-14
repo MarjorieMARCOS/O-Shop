@@ -120,6 +120,11 @@ INSERT INTO `category` (`id`, `name`, `subtitle`, `picture`, `home_order`, `crea
 
 COMMIT;
 
+# Mise à jour de chaque colonne picture dans la table category
+UPDATE `category`
+SET picture = REPLACE(picture, 'assets/images/', 'https://benoclock.github.io/S06-images/')
+;
+
 
 -- -----------------------------------------------------
 -- Data for table `type`
@@ -176,6 +181,12 @@ COMMIT;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+
+# Mise à jour de chaque colonne picture dans la table product
+UPDATE `product`
+SET picture = REPLACE(picture, 'assets/images/', 'https://benoclock.github.io/S06-images/')
+;
 
 -- -----------------------------------------------------
 -- Schema oshop
@@ -365,3 +376,6 @@ INSERT INTO `product_has_tag` (`product_id`, `tag_id`) VALUES (7, 7);
 INSERT INTO `product_has_tag` (`product_id`, `tag_id`) VALUES (20, 7);
 
 COMMIT;
+
+
+
