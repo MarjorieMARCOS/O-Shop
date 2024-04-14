@@ -1,9 +1,7 @@
 
-# NetPrime +
+# Oshop 
 
-NetPrime + est une future plateforme de VOD (Video On Demand) qui permettra de visionner des films en streaming. Elle se veut innovante et simple d'utilisation.
-Elle s'axe autour d'un champ de recherche hyper puissant qui permettra à nos clients de trouver facilement les films qu'ils souhaitent visionner.
-
+Oshop et un site de vente de chaussures.
 Le projet est fait en MVC.
 
 # Stacks utilisées  
