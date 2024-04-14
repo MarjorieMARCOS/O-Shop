@@ -1,8 +1,11 @@
 
-# Oshop 
+# Oshop BO
 
-Oshop et un site de vente de chaussures.
+Oshop BO est le Back Office du site de vente de chaussures super tendance.
 Le projet est fait en MVC.
+
+![alt text](./docs/image.png)
+![alt text](./docs/images.png)
 
 # Stacks utilisées  
 
