@@ -4,7 +4,7 @@
 Oshop BO est le Back Office du site de vente de chaussures super tendance.
 Le projet est fait en MVC.
 
-Il s'agit 'un projet fait durant la formation Développeur Web et Web Mobile.
+Il s'agit d'un projet fait durant la formation Développeur Web et Web Mobile.
 
 ![alt text](./docs/image.png)
 ![alt text](./docs/images.png)
